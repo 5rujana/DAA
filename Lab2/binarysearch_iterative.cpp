@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
     }
 
     int arr[argc - 1];
-    for (int i = 1; i < argc - 1; i++) {
-        arr[i - 1] = atoi(argv[i]);
+    for (int i = 0; i < argc - 1; i++) {
+        arr[i] = atoi(argv[i + 1]);
     }
 
     int size = argc - 1;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     int result = binarySearch(arr, size, key);
 
     if (result != -1) {
-        cout << key << " is found in the array at index " << result << endl;
+        cout << key << " is found in the sorted array at index " << result + 1 << endl;
     } else {
         cout << key << " is not found in the array" << endl;
     }
