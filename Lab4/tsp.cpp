@@ -4,6 +4,9 @@
 #include <algorithm>
 #include <climits>
 using namespace std;
+int min(int a,int b){
+    return (a<b)? a:b;
+}
 
 int tsp(vector<vector<int>> &graph, int n, int start, int pos, int count, int cost, int &ans, vector<bool> &visited)
 {

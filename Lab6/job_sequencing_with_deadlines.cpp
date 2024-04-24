@@ -1,78 +1,72 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-// Structure to represent a job with its id, deadline, and profit
-struct Job
-{
-    char id;
-    int dead;
+struct job{
     int profit;
+    int deadlines;
+    int id;
 };
 
-// Comparison function to sort jobs based on profit in descending order
-bool comparison(Job a, Job b)
-{
-    return (a.profit > b.profit);
+int maxdeadline(job jobs[],int n){
+    int max = 0;
+    for(int i = 0;i<n;i++){
+        if(max< (jobs[i].deadlines)){
+            max = jobs[i].deadlines;
+        }
+    }
+    return max;
 }
 
-// Function to print the job scheduling with deadlines and profits
-void printJobScheduling(Job arr[], int n)
-{
-    // Sort the jobs based on profit in descending order
-    sort(arr, arr + n, comparison); 
-    // how does sort(arr, arr + n, comparison) work?
-    //it sorts the array arr of size n in descending order based on the comparison function
+bool compareProfits(job& a , job& b){
+    return a.profit>b.profit;
+}
 
-    // Arrays to store the final result and availability of time slots
-    int result[n];
-    bool slot[n];
-
-    // Initialize all slots to be available
-    for (int i = 0; i < n; i++)
-        slot[i] = false;
-
-    // Iterate through all the jobs and fill the time slots
-    for (int i = 0; i < n; i++)
-    {
-        // Find the latest available time slot before the job's deadline
-        for (int j = min(n, arr[i].dead) - 1; j >= 0; j--)
-        {
-            if (slot[j] == false)
-            {
-                // Assign the job to the time slot
-                result[j] = i;
-                slot[j] = true;
+int Maxprof(job jobs[], int n) {
+    int max = maxdeadline(jobs, n);
+    sort(jobs, jobs + n, compareProfits);
+    signed int assigned[max];
+    for (int i = 0; i < max; i++) {
+        assigned[i] = -1;
+    }
+    int maxprof = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = min(max, jobs[i].deadlines) - 1; j >= 0; --j) { // Corrected condition
+            if (assigned[j] == -1) {
+                assigned[j] = jobs[i].id;
+                maxprof += jobs[i].profit;
                 break;
             }
         }
     }
 
-    // Print the job sequence for maximum profit
-    cout << "Job sequence for maximum profit: ";
-    for (int i = 0; i < n; i++)
-        if (slot[i])
-            cout << arr[result[i]].id << " ";
+    cout << "Job sequence: ";
+    for (int i = 0; i < max; ++i) {
+        if (assigned[i] != -1) {
+            cout << assigned[i] << " ";
+        }
+    }
+    cout << endl;
+    return maxprof;
 }
 
-int main()
-{
-    // Input the number of jobs
+int main(){
     int n;
-    cout << "Enter the number of jobs: ";
-    cin >> n;
+    cout<<"Enter the number of jobs: ";
+    cin>>n;
 
-    // Input job details: id, deadline, and profit
-    Job arr[n];
-    cout << "Enter the job id, deadline, and profit for each job: ";
-    for (int i = 0; i < n; i++)
-    {
-        cin >> arr[i].id >> arr[i].dead >> arr[i].profit;
+    job jobs[n];
+    cout << "Enter the profit and deadline of each job:" << endl;
+    for (int i = 0; i < n; ++i) {
+        cout << "Job " << i + 1 << ":" << endl;
+        cout << "Profit: ";
+        cin >> jobs[i].profit;
+        cout << "Deadline: ";
+        cin >> jobs[i].deadlines;
+        jobs[i].id = i + 1; // Assigning job IDs
     }
 
-    // Print the job sequence with maximum profit
-    cout << "Following is the maximum profit sequence of jobs\n";
-    printJobScheduling(arr, n);
-    cout << endl;
+    int maxProfit = Maxprof(jobs, n);
+    cout << "Maximum profit: " << maxProfit << endl;
 
     return 0;
 }
